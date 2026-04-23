@@ -1,0 +1,117 @@
+@model IEnumerable<HotelBooking.Models.Room>
+
+<style>
+    .rooms-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 60px;
+    }
+
+    .room-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(201,168,76,0.25);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .room-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .room-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .room-card-body {
+        padding: 24px;
+    }
+
+    .room-card-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.4rem;
+        color: var(--white);
+        margin-bottom: 8px;
+    }
+
+    .room-card-desc {
+        font-size: 0.75rem;
+        color: var(--white-dim);
+        margin-bottom: 16px;
+        line-height: 1.6;
+    }
+
+    .room-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(201,168,76,0.15);
+        padding-top: 16px;
+        margin-top: 16px;
+    }
+
+    .room-price-amount {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.6rem;
+        color: var(--gold);
+    }
+
+    .room-price-unit {
+        font-size: 0.6rem;
+        color: var(--white-dim);
+        letter-spacing: 0.1em;
+    }
+
+    .room-badge {
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #4caf7d;
+        border: 1px solid #4caf7d;
+        padding: 3px 10px;
+        margin-bottom: 12px;
+        display: inline-block;
+    }
+
+    @@media (max-width: 900px) {
+        .rooms-grid { grid-template-columns: 1fr; padding: 24px; }
+    }
+</style>
+
+<div style="padding: 80px 60px 20px; text-align:center;">
+    <p style="color:var(--gold); letter-spacing:4px; font-size:0.7rem; text-transform:uppercase;">— Lưu trú —</p>
+    <h2 style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:300; color:var(--white);">
+        Các hạng phòng <em style="color:var(--gold);">đặc biệt</em>
+    </h2>
+</div>
+
+<div class="rooms-grid">
+    @foreach (var room in Model)
+    {
+        <div class="room-card">
+            <img src="@(string.IsNullOrEmpty(room.ImageUrl)
+                ? "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600"
+                : room.ImageUrl)"
+                 alt="@room.Name" />
+            <div class="room-card-body">
+                <span class="room-badge">Còn phòng</span>
+                <div class="room-card-title">@room.Name</div>
+                <div class="room-card-desc">@room.Description</div>
+                <div class="room-card-footer">
+                    <div>
+                        <div class="room-price-amount">@room.PricePerNight.ToString("N0")</div>
+                        <div class="room-price-unit">VNĐ / đêm • @room.Capacity người</div>
+                    </div>
+                    <a asp-action="Details" asp-route-id="@room.Id" class="btn-gold"
+                       style="font-size:0.6rem; padding:10px 20px;">
+                        Xem →
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,214 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <div class="hero-eyebrow">Chào mừng đến với</div>
+        <h1 class="hero-title">
+            Lumière<br><em>Hotel & Resort</em>
+        </h1>
+        <p class="hero-subtitle">Trải nghiệm đẳng cấp — Nơi xa hoa gặp gỡ sự bình yên</p>
+        <div class="hero-btns">
+            <a href="/Room" class="btn-gold">Khám phá phòng</a>
+            <a href="/Account/Register" class="btn-outline">Đăng ký ngay</a>
+        </div>
+    </div>
+
+    <div class="scroll-indicator">
+        <span>Cuộn xuống</span>
+        <div class="scroll-line"></div>
+    </div>
+</section>
+
+<!-- BOOKING BAR -->
+<div class="booking-bar">
+    <div class="booking-field">
+        <div class="booking-label"><i class="bi bi-calendar3"></i> Nhận phòng</div>
+        <input type="date" class="booking-input" />
+    </div>
+    <div class="booking-field">
+        <div class="booking-label"><i class="bi bi-calendar3"></i> Trả phòng</div>
+        <input type="date" class="booking-input" />
+    </div>
+    <div class="booking-field">
+        <div class="booking-label"><i class="bi bi-people"></i> Số khách</div>
+        <input type="number" class="booking-input" placeholder="2 người" min="1" max="10" />
+    </div>
+    <button class="booking-btn" onclick="window.location='/Room'">Tìm phòng →</button>
+</div>
+
+<!-- ROOMS SECTION -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Lưu trú</div>
+        <h2 class="section-title">Các hạng phòng <em>đặc biệt</em></h2>
+    </div>
+
+    <div class="rooms-grid">
+        @if (Model != null)
+        {
+            foreach (var room in Model)
+            {
+                <a href="/Room/Details/@room.Id" class="room-card">
+                    <div class="room-img-wrap">
+                        @{
+                            var imgUrl = room.Id == 1
+                                ? "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80"
+                                : room.Id == 2
+                                ? "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80"
+                                : "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80";
+                        }
+                        <img src="@imgUrl" alt="@room.Name" class="room-img" />
+                        <span class="room-badge">@(room.IsAvailable ? "Còn phòng" : "Hết phòng")</span>
+                    </div>
+                    <div class="room-body">
+                        <h3 class="room-name">@room.Name</h3>
+                        <p class="room-desc">@room.Description</p>
+                        <div class="room-footer">
+                            <div class="room-price">
+                                <div class="room-price-amount">@room.PricePerNight.ToString("N0")</div>
+                                <div class="room-price-unit">VNĐ / đêm</div>
+                            </div>
+                            <span class="room-cta">Xem chi tiết →</span>
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+        else
+        {
+            <!-- Static cards nếu chưa có data -->
+            <a href="/Room" class="room-card">
+                <div class="room-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80" class="room-img" alt="Standard" />
+                    <span class="room-badge">Còn phòng</span>
+                </div>
+                <div class="room-body">
+                    <h3 class="room-name">Phòng Standard</h3>
+                    <p class="room-desc">Không gian ấm cúng, đầy đủ tiện nghi cho 2 người.</p>
+                    <div class="room-footer">
+                        <div class="room-price">
+                            <div class="room-price-amount">500,000</div>
+                            <div class="room-price-unit">VNĐ / đêm</div>
+                        </div>
+                        <span class="room-cta">Xem chi tiết →</span>
+                    </div>
+                </div>
+            </a>
+            <a href="/Room" class="room-card">
+                <div class="room-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80" class="room-img" alt="Deluxe" />
+                    <span class="room-badge">Còn phòng</span>
+                </div>
+                <div class="room-body">
+                    <h3 class="room-name">Phòng Deluxe</h3>
+                    <p class="room-desc">Sang trọng, view đẹp, dịch vụ cao cấp vượt trội.</p>
+                    <div class="room-footer">
+                        <div class="room-price">
+                            <div class="room-price-amount">900,000</div>
+                            <div class="room-price-unit">VNĐ / đêm</div>
+                        </div>
+                        <span class="room-cta">Xem chi tiết →</span>
+                    </div>
+                </div>
+            </a>
+            <a href="/Room" class="room-card">
+                <div class="room-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80" class="room-img" alt="Suite" />
+                    <span class="room-badge">Còn phòng</span>
+                </div>
+                <div class="room-body">
+                    <h3 class="room-name">Phòng Suite</h3>
+                    <p class="room-desc">Đỉnh cao xa hoa, trải nghiệm hoàng gia đích thực.</p>
+                    <div class="room-footer">
+                        <div class="room-price">
+                            <div class="room-price-amount">1,500,000</div>
+                            <div class="room-price-unit">VNĐ / đêm</div>
+                        </div>
+                        <span class="room-cta">Xem chi tiết →</span>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
+</section>
+
+<!-- AMENITIES -->
+<section class="section amenities-section">
+    <div class="section-header">
+        <div class="section-tag">Tiện ích</div>
+        <h2 class="section-title">Dịch vụ <em>đẳng cấp</em></h2>
+    </div>
+    <div class="amenities-grid">
+        <div class="amenity-item">
+            <i class="bi bi-water amenity-icon"></i>
+            <div class="amenity-name">Hồ bơi vô cực</div>
+        </div>
+        <div class="amenity-item">
+            <i class="bi bi-cup-hot amenity-icon"></i>
+            <div class="amenity-name">Nhà hàng & Bar</div>
+        </div>
+        <div class="amenity-item">
+            <i class="bi bi-flower1 amenity-icon"></i>
+            <div class="amenity-name">Spa & Wellness</div>
+        </div>
+        <div class="amenity-item">
+            <i class="bi bi-wifi amenity-icon"></i>
+            <div class="amenity-name">Wi-Fi tốc độ cao</div>
+        </div>
+        <div class="amenity-item">
+            <i class="bi bi-car-front amenity-icon"></i>
+            <div class="amenity-name">Đưa đón sân bay</div>
+        </div>
+        <div class="amenity-item">
+            <i class="bi bi-shield-check amenity-icon"></i>
+            <div class="amenity-name">Bảo mật 24/7</div>
+        </div>
+    </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section">
+    <div class="section-header">
+        <div class="section-tag">Đánh giá</div>
+        <h2 class="section-title">Khách hàng <em>nói gì</em></h2>
+    </div>
+    <div class="reviews-grid">
+        <div class="review-card">
+            <div class="review-quote">"</div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">Dịch vụ tuyệt vời, phòng rộng rãi và sạch sẽ. Nhân viên thân thiện, chắc chắn sẽ quay lại lần sau.</p>
+            <div class="review-author">Nguyễn Văn A — Hà Nội</div>
+        </div>
+        <div class="review-card">
+            <div class="review-quote">"</div>
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">Trải nghiệm lưu trú đáng nhớ nhất trong cuộc đời. View từ phòng Suite nhìn ra biển cực kỳ đẹp.</p>
+            <div class="review-author">Trần Thị B — TP. Hồ Chí Minh</div>
+        </div>
+        <div class="review-card">
+            <div class="review-quote">"</div>
+            <div class="review-stars">★★★★☆</div>
+            <p class="review-text">Buffet sáng phong phú, nhiều lựa chọn. Không gian hồ bơi rộng, yên tĩnh. Rất phù hợp để nghỉ dưỡng.</p>
+            <div class="review-author">Lê Hoàng C — Đà Nẵng</div>
+        </div>
+    </div>
+</section>
+
+<!-- BANNER CTA -->
+<section style="position:relative; height:400px; overflow:hidden;">
+    <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1920&q=80');background-size:cover;background-position:center;filter:brightness(0.3);"></div>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;">
+        <div class="section-tag" style="margin-bottom:16px;">Ưu đãi đặc biệt</div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:300;color:var(--white);margin-bottom:12px;">
+            Đặt phòng hôm nay — <em style="color:var(--gold)">Giảm 20%</em>
+        </h2>
+        <p style="font-size:0.7rem;letter-spacing:0.2em;color:var(--white-dim);margin-bottom:36px;text-transform:uppercase;">Ưu đãi có hạn cho thành viên mới</p>
+        <a href="/Account/Register" class="btn-gold">Đăng ký nhận ưu đãi</a>
+    </div>
+</section>

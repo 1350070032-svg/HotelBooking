@@ -1,0 +1,86 @@
+@model IEnumerable<HotelBooking.Models.Booking>
+
+<style>
+    .booking-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(212,175,55,0.25);
+        border-radius: 10px;
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        color: #fff;
+        transition: border-color 0.3s;
+    }
+    .booking-card:hover {
+        border-color: #D4AF37;
+    }
+    .status-pending {
+        background: rgba(255,193,7,0.15);
+        color: #ffc107;
+        border: 1px solid #ffc107;
+        padding: 3px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+    .status-confirmed {
+        background: rgba(40,167,69,0.15);
+        color: #28a745;
+        border: 1px solid #28a745;
+        padding: 3px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+    .divider-gold {
+        border-color: rgba(212,175,55,0.3);
+    }
+    .label-gold { color: #D4AF37; font-size:0.8rem; letter-spacing:1px; }
+</style>
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <p style="color:#D4AF37; letter-spacing:3px; font-size:0.85rem;">— TÀI KHOẢN —</p>
+        <h2 style="color:#fff; font-size:2.5rem;">Đặt phòng <span style="color:#D4AF37; font-style:italic;">của tôi</span></h2>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5" style="color:#888;">
+            <p style="font-size:3rem;">🏨</p>
+            <p>Bạn chưa có đặt phòng nào.</p>
+            <a asp-controller="Room" asp-action="Index" 
+               style="color:#D4AF37; border:1px solid #D4AF37; padding:10px 28px; border-radius:4px; text-decoration:none;">
+                Xem phòng ngay
+            </a>
+        </div>
+    }
+    else
+    {
+        @foreach (var b in Model)
+        {
+            <div class="booking-card">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <div class="label-gold">PHÒNG</div>
+                        <h5 class="mt-1 mb-0">@b.Room?.Name</h5>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="label-gold">NHẬN PHÒNG</div>
+                        <div>@b.CheckIn.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="label-gold">TRẢ PHÒNG</div>
+                        <div>@b.CheckOut.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="label-gold">SỐ ĐÊM</div>
+                        <div>@((b.CheckOut - b.CheckIn).Days) đêm</div>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <span class="@(b.Status == "Confirmed" ? "status-confirmed" : "status-pending")">
+                            @b.Status
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

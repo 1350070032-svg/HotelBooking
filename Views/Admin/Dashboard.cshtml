@@ -1,0 +1,140 @@
+@model List<HotelBooking.Models.Room>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var bookings = ViewBag.Bookings as List<HotelBooking.Models.Booking> ?? new List<HotelBooking.Models.Booking>();
+}
+
+<section class="section" style="padding-top:120px;">
+
+    <div class="section-header">
+        <div class="section-tag">Quản trị</div>
+        <h2 class="section-title">Admin <em>Dashboard</em></h2>
+    </div>
+
+    <!-- THỐNG KÊ -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(201,168,76,0.1);margin-bottom:60px;">
+        <div style="background:var(--dark2);padding:40px;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);">@(ViewBag.TotalBookings ?? 0)</div>
+            <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);">Tổng đơn đặt</div>
+        </div>
+        <div style="background:var(--dark2);padding:40px;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);">@(((decimal)(ViewBag.Revenue ?? 0m)).ToString("N0"))đ</div>
+            <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);">Doanh thu</div>
+        </div>
+        <div style="background:var(--dark2);padding:40px;text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);">@(ViewBag.PendingBookings ?? 0)</div>
+            <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);">Chờ xác nhận</div>
+        </div>
+    </div>
+
+    <!-- DANH SÁCH PHÒNG - chỉnh sửa trực tiếp -->
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--white);margin-bottom:24px;">
+        Quản lý phòng
+    </h3>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:60px;">
+        <thead>
+            <tr style="border-bottom:1px solid rgba(201,168,76,0.3);">
+                <th style="padding:16px;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Tên phòng</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Giá/đêm</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Sức chứa</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Còn phòng</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Trạng thái</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);"></th>
+            </tr>
+        </thead>
+        <tbody>
+        @if (Model != null)
+        {
+            foreach (var room in Model)
+            {
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <form asp-action="EditRoom" asp-controller="Admin" method="post">
+                    <input type="hidden" name="Id" value="@room.Id" />
+                    <input type="hidden" name="ImageUrl" value="@room.ImageUrl" />
+                    <input type="hidden" name="TotalRooms" value="@room.TotalRooms" />
+                    <td style="padding:16px;">
+                        <input style="background:transparent;border:1px solid rgba(201,168,76,0.2);color:var(--white);padding:8px 12px;width:180px;font-family:inherit;"
+                               name="Name" value="@room.Name" />
+                    </td>
+                    <td style="padding:16px;">
+                        <input style="background:transparent;border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:8px 12px;width:120px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;"
+                               name="PricePerNight" value="@room.PricePerNight" type="number" />
+                    </td>
+                    <td style="padding:16px;">
+                        <input style="background:transparent;border:1px solid rgba(201,168,76,0.2);color:var(--white);padding:8px 12px;width:80px;font-family:inherit;"
+                               name="Capacity" value="@room.Capacity" type="number" />
+                    </td>
+                    <td style="padding:16px;">
+                        <input style="background:transparent;border:1px solid rgba(201,168,76,0.2);color:var(--white);padding:8px 12px;width:80px;font-family:inherit;"
+                               name="AvailableRooms" value="@room.AvailableRooms" type="number" />
+                    </td>
+                    <td style="padding:16px;">
+                        <select name="IsAvailable" style="background:var(--dark2);border:1px solid rgba(201,168,76,0.2);color:var(--white);padding:8px 12px;font-family:inherit;">
+                            @if (room.IsAvailable)
+{
+    <option value="true" selected>Còn phòng</option>
+    <option value="false">Hết phòng</option>
+}
+else
+{
+    <option value="true">Còn phòng</option>
+    <option value="false" selected>Hết phòng</option>
+}
+                        </select>
+                    </td>
+                    <td style="padding:16px;">
+                        <button type="submit" class="btn-gold" style="padding:10px 20px;font-size:0.6rem;">💾 Lưu</button>
+                    </td>
+                    </form>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+
+    <!-- DANH SÁCH ĐƠN ĐẶT PHÒNG -->
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--white);margin-bottom:24px;">
+        Đơn đặt phòng
+    </h3>
+    <table style="width:100%;border-collapse:collapse;">
+        <thead>
+            <tr style="border-bottom:1px solid rgba(201,168,76,0.3);">
+                <th style="padding:16px;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Khách hàng</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Phòng</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Nhận</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Trả</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Tổng tiền</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Trạng thái</th>
+                <th style="padding:16px;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var b in bookings)
+        {
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                <td style="padding:16px;font-size:0.8rem;color:var(--white-dim);">@(b.User?.Email ?? b.UserId)</td>
+                <td style="padding:16px;font-size:0.8rem;color:var(--white);">@(b.Room?.Name ?? "N/A")</td>
+                <td style="padding:16px;font-size:0.8rem;color:var(--white-dim);">@b.CheckIn.ToString("dd/MM/yyyy")</td>
+                <td style="padding:16px;font-size:0.8rem;color:var(--white-dim);">@b.CheckOut.ToString("dd/MM/yyyy")</td>
+                <td style="padding:16px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);">@b.TotalPrice.ToString("N0")đ</td>
+                <td style="padding:16px;">
+                    @{
+                        var badgeColor = b.Status == "Confirmed" ? "#2d6a4f" : b.Status == "Cancelled" ? "#6b2d2d" : "#6b5a2d";
+                    }
+                    <span style="background:@badgeColor;color:var(--white);padding:4px 12px;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;">
+                        @b.Status
+                    </span>
+                </td>
+                <td style="padding:16px;display:flex;gap:8px;">
+                    @if (b.Status == "Pending")
+                    {
+                        <a href="/Admin/ConfirmBooking/@b.Id" class="btn-gold" style="padding:8px 16px;font-size:0.55rem;">✓ Xác nhận</a>
+                        <a href="/Admin/CancelBooking/@b.Id" style="padding:8px 16px;font-size:0.55rem;border:1px solid #6b2d2d;color:#e07070;text-decoration:none;">✕ Huỷ</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</section>
